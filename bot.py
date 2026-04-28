@@ -1,4 +1,3 @@
-import asyncio
 import requests
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
@@ -72,32 +71,23 @@ async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_msg = update.message.text
     
-    # Efek typing
     await context.bot.send_chat_action(
         chat_id=update.effective_chat.id,
         action="typing"
     )
     
-    # Dapetin jawaban
     response = chat_groq(user_msg)
-    
-    # Kirim
     await update.message.reply_text(response)
 
-async def main():
-    # Build application
-    application = Application.builder().token(TELEGRAM_TOKEN).build()
-    
-    # Add handlers
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("ping", ping))
-    application.add_handler(CommandHandler("help", help_cmd))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat))
-    
-    print("🤖 XINN GPT ONLINE!")
-    
-    # Run bot
-    await application.run_polling()
+# ====== MAIN TANPA asyncio.run() ======
+application = Application.builder().token(TELEGRAM_TOKEN).build()
 
-if __name__ == "__main__":
-    asyncio.run(main())
+application.add_handler(CommandHandler("start", start))
+application.add_handler(CommandHandler("ping", ping))
+application.add_handler(CommandHandler("help", help_cmd))
+application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat))
+
+print("🤖 XINN GPT ONLINE!")
+
+# Railway auto-handle event loop, jadi pake ini aja:
+application.run_polling(drop_pending_updates=True)
