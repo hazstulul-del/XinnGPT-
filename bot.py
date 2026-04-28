@@ -1,11 +1,12 @@
+import os
 import requests
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
-# ========== DATA BOT LO ==========
-TELEGRAM_TOKEN = "8614298701:AAFamOYmDzwejilFKGjL1QSXP61WTxL6zyY"
-DEEPSEEK_API_KEY = "sk-f3bc70ed6af348a0ada21057adadbe01"
-# =================================
+# ========== AMBIL DARI ENVIRONMENT VARIABLE ==========
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY")
+# =====================================================
 
 SYSTEM_PROMPT = """Kamu adalah XinnGPT, AI asisten chill & gaul.
 Gaya lo:
